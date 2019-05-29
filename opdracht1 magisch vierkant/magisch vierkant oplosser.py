@@ -1,7 +1,14 @@
 import numpy
 
-rowCounter = 0
-
+def same(echelon):
+    deleteColums = []
+    counter = 0
+    for item in range(10):
+        listOfLetter = [echelon[0][counter], echelon[1][counter], echelon[2][counter], echelon[3][counter], echelon[4][counter], echelon[5][counter], echelon[6][counter], echelon[7][counter], echelon[8][counter]]
+        if all(element == 0 for element in listOfLetter):
+            deleteColums.append(counter)
+        counter += 1
+    return deleteColums
 
 def check(variable1, variable2, variable3, J):
     uitkomst = 0
@@ -10,12 +17,13 @@ def check(variable1, variable2, variable3, J):
     index2 = 0
     index3 = 0
 
-    if variable1 == variable2 and variable2 == variable3 and variable3 == variable1:
+    if variable2 == "geen waarde":
         if type(variable1) == type(int):
             uitkomst -= 3 * variable1
             index1 = variable1
         else:
             formule.append(variable1)
+
     else:
         if type(variable1) == int:
             uitkomst -= variable1
@@ -48,29 +56,29 @@ def echelonFillIn(formulex):
     set2 = 0
     set3 = 0
 
-    if formulex[-3] == formulex[-2] and formulex[-2] == formulex[-1] and formulex[-1] == formulex[-3]:
+    if len(formulex[0]) == 1:
         if formulex[0] == '-':
             set1 = 0
-            totaal += formulex[-1]
+            totaal -= 3 * formulex[-1]
         else:
-            set1 = 1
+            set1 = 3
 
     else:
         if formulex[0][0] == '-':
             set1 = 0
-            totaal += formulex[-3]
+            totaal -= formulex[-3]
         else:
             set1 = 1
 
         if formulex[0][1] == '-':
             set2 = 0
-            totaal += formulex[-2]
+            totaal -= formulex[-2]
         else:
             set2 = 1
 
         if formulex[0][2] == '-':
             set3 = 0
-            totaal += formulex[-1]
+            totaal -= formulex[-1]
         else:
             set3 = 1
 
@@ -92,6 +100,8 @@ H = matrix[2][1]
 I = matrix[2][2]
 J = "J"
 
+
+
 formule1 = check(A, B, C, J)
 formule2 = check(D, E, F, J)
 formule3 = check(G, H, I, J)
@@ -100,22 +110,18 @@ formule5 = check(G, E, C, J)
 formule6 = check(A, D, G, J)
 formule7 = check(B, E, H, J)
 formule8 = check(C, F, I, J)
-formule9 = check(E, E, E, J)
+formule9 = check(E, "geen waarde", "geen waarde", J)
 
-echelonFormule1 = 0
-
-listData = []
-
-#           A  B  C  D  E   F  G  H  I  J  T
-echelon = [[1, 1, 1, 0, 0, 0, 0, 0, 0, -1 ],
-           [0, 0, 0, 1, 1, 1, 0, 0, 0, -1 ],
-           [0, 0, 0, 0, 0, 0, 1, 1, 1, -1 ],
-           [1, 0, 0, 0, 1, 0, 0, 0, 1, -1 ],
-           [0, 0, 1, 0, 1, 0, 1, 0, 0, -1 ],
-           [1, 0, 0, 1, 0, 0, 1, 0, 0, -1 ],
-           [0, 1, 0, 0, 1, 0, 0, 1, 0, -1 ],
-           [0, 0, 1, 0, 0, 1, 0, 0, 1, -1 ],
-           [0, 0, 0, 0, 3, 0, 0, 0, 0, -1 ]]
+#           A  B  C  D  E  F  G  H  I   J  T
+echelon = [[1, 1, 1, 0, 0, 0, 0, 0, 0, -1],
+           [0, 0, 0, 1, 1, 1, 0, 0, 0, -1],
+           [0, 0, 0, 0, 0, 0, 1, 1, 1, -1],
+           [1, 0, 0, 0, 1, 0, 0, 0, 1, -1],
+           [0, 0, 1, 0, 1, 0, 1, 0, 0, -1],
+           [1, 0, 0, 1, 0, 0, 1, 0, 0, -1],
+           [0, 1, 0, 0, 1, 0, 0, 1, 0, -1],
+           [0, 0, 1, 0, 0, 1, 0, 0, 1, -1],
+           [0, 0, 0, 0, 3, 0, 0, 0, 0, -1]]
 
 totaal = [0,
           0,
@@ -167,14 +173,59 @@ echelon[7][5] = echelonFillIn(formule8)[1]
 echelon[7][8] = echelonFillIn(formule8)[2]
 totaal[7] = echelonFillIn(formule8)[3]
 
-echelon[8][0] = echelonFillIn(formule9)[0]
-echelon[8][4] = echelonFillIn(formule9)[1]
-echelon[8][8] = echelonFillIn(formule9)[2]
+echelon[8][4] = echelonFillIn(formule9)[0]
 totaal[8] = echelonFillIn(formule9)[3]
 
-print(echelon)
-print(totaal)
 
-# numpy.solve()
-# numpy.pinf == numpy.pseudoinverse
-# uitkomst hierboven keer oplossing doen.
+deleteFormuleIndex = same(echelon)
+
+if deleteFormuleIndex != []:
+    del echelon[0][deleteFormuleIndex[0]], echelon[1][deleteFormuleIndex[0]], echelon[2][deleteFormuleIndex[0]], echelon[3][deleteFormuleIndex[0]], echelon[4][deleteFormuleIndex[0]], echelon[5][
+        deleteFormuleIndex[0]], echelon[6][deleteFormuleIndex[0]], echelon[7][deleteFormuleIndex[0]], echelon[8][deleteFormuleIndex[0]]
+
+
+nump_echelon = numpy.array(echelon)
+pseudo_inverse = numpy.linalg.pinv(nump_echelon)
+
+uitkomst = numpy.dot(pseudo_inverse, totaal)
+
+
+showMagicSquare = [[0,0,0],[0,0,0],[0,0,0]]
+row = 0
+colum = 0
+uitkomstCounter = 0
+for rows in showMagicSquare:
+    for colums in showMagicSquare[0]:
+        checker = row*3 + colum
+        if checker != deleteFormuleIndex[0]:
+            if uitkomstCounter != 8:
+                showMagicSquare[row][colum] = uitkomst[uitkomstCounter]
+                colum+=1
+                uitkomstCounter += 1
+            else:
+                showMagicSquare[row][colum] = uitkomst[8]
+                colum+=1
+                uitkomstCounter += 1
+        else:
+            if row != 3:
+                showMagicSquare[row][colum] = matrix[row][colum]
+                colum += 1
+    colum = 0
+    row += 1
+
+showMagicSquare[0].append(0)
+showMagicSquare[1].append(0)
+showMagicSquare[2].append(0)
+showMagicSquare.append([])
+
+if deleteFormuleIndex != 8:
+    showMagicSquare[0][3] = uitkomst[8]
+    showMagicSquare[1][3] = uitkomst[8]
+    showMagicSquare[2][3] = uitkomst[8]
+    showMagicSquare[3] = [uitkomst[8], uitkomst[8], uitkomst[8], uitkomst[8]]
+else:
+    showMagicSquare[0][3] = J
+    showMagicSquare[1][3] = J
+    showMagicSquare[2][3] = J
+    showMagicSquare[3] = [J, J, J, J]
+print(numpy.array(showMagicSquare))
